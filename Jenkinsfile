@@ -12,7 +12,7 @@ pipeline{
     stage('build'){
         steps{
             echo 'Building the code'
-            sh 'docker build -t 2-tier-app ./'
+            bat 'docker build -t 2-tier-app ./'
             echo "code building completed"
         }
     }
@@ -23,11 +23,11 @@ pipeline{
              usernameVariable: 'DOCKER_USER',
               passwordVariable: 'DOCKER_PASS')]) {
             echo 'Pushing the code to docker hub'
-             sh """
+             bat """
               echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
             """
-            sh 'docker tag 2-tier-app:latest ${DOCKER_USER}/2-tier-app:latest'
-            sh 'docker push ${DOCKER_USER}/2-tier-app:latest'
+            bat 'docker tag 2-tier-app:latest ${DOCKER_USER}/2-tier-app:latest'
+            bat 'docker push ${DOCKER_USER}/2-tier-app:latest'
             echo "code pushed to docker hub"
               }
         }
@@ -36,7 +36,7 @@ pipeline{
         steps{
             sshagent(['ec2-ssh-key']) {
             withAWS(region: 'us-east-2', credentials: 'aws-jenkins-connection') {
-            sh '''
+            bat '''
                 ssh -o StrictHostKeyChecking=no ubuntu@18.191.111.178 "
                 cd /home/ubuntu/2-tier-app &&
                 git pull origin main &&
