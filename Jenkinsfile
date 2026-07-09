@@ -19,7 +19,7 @@ pipeline{
     stage('push code to docker hub'){
         steps{
             withCredentials([usernamePassword(
-            credentialsId: 'jenkins-docker-connection',
+            credentialsId: 'docker-jen-conn',
              usernameVariable: 'DOCKER_USER',
               passwordVariable: 'DOCKER_PASS')]) {
             echo 'Pushing the code to docker hub'
@@ -35,7 +35,7 @@ pipeline{
     stage('deploy'){
         steps{
             sshagent(['ec2-ssh-key']) {
-            withAWS(region: 'us-east-2', credentials: 'aws-jenkins-connection') {
+            withAWS(region: 'us-east-2', credentials: 'aws-jen-conn') {
             bat '''
                 ssh -o StrictHostKeyChecking=no ubuntu@18.191.111.178 "
                 cd /home/ubuntu/2-tier-app &&
