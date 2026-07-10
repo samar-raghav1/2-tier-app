@@ -14,29 +14,54 @@ const PORT = process.env.PORT || 5000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
-// Define Schema & Model
+// Schema & Model
 const DataSchema = new mongoose.Schema({
   name: String,
   age: Number,
 });
-
 const DataModel = mongoose.model("Data", DataSchema);
 
-// Serve HTML form + data list
+// Serve HTML form + data list with Bootstrap styling
 app.get("/", async (req, res) => {
   const allData = await DataModel.find();
+
   res.send(`
-    <h2>Enter Data</h2>
-    <form method="POST" action="/add">
-      <input type="text" name="name" placeholder="Name" required />
-      <input type="number" name="age" placeholder="Age" required />
-      <button type="submit">Save</button>
-    </form>
-    <h2>Stored Data</h2>
-    <ul>
-      ${allData.map(item => `<li>${item.name} - ${item.age}</li>`).join("")}
-    </ul>
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Data Entry App</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+      <style>
+        body { background: #f8f9fa; }
+        .container { margin-top: 50px; }
+        h2 { color: #343a40; }
+        .card { margin-top: 20px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2 class="text-center">Enter Data</h2>
+        <div class="card p-4 shadow-sm">
+          <form method="POST" action="/add">
+            <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" name="name" class="form-control" placeholder="Enter name" required />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Age</label>
+              <input type="number" name="age" class="form-control" placeholder="Enter age" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Save</button>
+          </form>
+        </div>
+
+        <h2 class="text-center mt-5">Stored Data</h2>
+        <ul class="list-group">
+          ${allData.map(item => `<li class="list-group-item">${item.name} - ${item.age}</li>`).join("")}
+        </ul>
+      </div>
+    </body>
+    </html>
   `);
 });
 
@@ -49,5 +74,5 @@ app.post("/add", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

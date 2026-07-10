@@ -9,7 +9,7 @@ RUN npm install
 
 COPY . .
 
-COPY .env.sample .env
+CMD ["cp", ".env.sample", ".env"]
 
 FROM node:20-alpine
 
