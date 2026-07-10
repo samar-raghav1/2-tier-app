@@ -41,7 +41,7 @@ sudo systemctl enable mongodb
 
 ## Clone Repo
 git clone https://github.com/samar-raghav1.git
-cd <2-tier-app>
+cd 2-tier-app
 
 cp .env.sample .env
 
