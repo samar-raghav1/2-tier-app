@@ -44,7 +44,7 @@ pipeline{
                         cd /home/ubuntu/2-tier-app &&
                         git pull origin main &&
                         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin &&
-                        docker pull samarraghav001/2-tier-app:latest &&
+                        docker pull samarraghav1/2-tier-app:latest &&
                         docker compose down &&
                         docker compose up  --build
                     "
