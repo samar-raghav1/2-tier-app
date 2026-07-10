@@ -35,9 +35,9 @@ pipeline{
     stage('deploy'){
         steps{
             sshagent(['ec2-ssh-key']) {
-            withAWS(region: 'us-east-2', credentials: 'aws-jen-conn') {
+            withAWS(region: 'us-east-1', credentials: 'aws-jen-conn') {
             sh '''
-                ssh -o StrictHostKeyChecking=no ubuntu@18.191.111.178 "
+                ssh -o StrictHostKeyChecking=no ubuntu@54.221.67.121 "
                 cd /home/ubuntu/2-tier-app &&
                 git pull origin main &&
                 docker pull samarraghav001/2-tier-app:latest &&
@@ -50,8 +50,5 @@ pipeline{
         }
     }
 
-
-    
-    
   }
 }
