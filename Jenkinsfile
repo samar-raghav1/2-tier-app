@@ -24,7 +24,7 @@ pipeline{
     stage('push code to docker hub'){
         steps{
             withCredentials([usernamePassword(
-            credentialsId: 'docker-jen-conn',
+            credentialsId: 'jenkins-docker',
              usernameVariable: 'DOCKER_USER',
               passwordVariable: 'DOCKER_PASS')]) {
             echo 'Pushing the code to docker hub'
