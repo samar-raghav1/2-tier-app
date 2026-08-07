@@ -37,29 +37,7 @@ pipeline{
               }
         }
     }
-  stage('Deploy to AWS EC2') {
-    steps {
-        sshagent(['ec2-ssh-key']) {
-            withAWS(region: 'us-east-1', credentials: 'aws-jen-conn') {
-                withCredentials([usernamePassword(credentialsId: 'docker-jen-conn', 
-                                                  usernameVariable: 'DOCKER_USER', 
-                                                  passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@54.221.67.121 "
-                        cd /home/ubuntu/2-tier-app &&
-                        git pull origin main &&
-                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin &&
-                        docker pull samarraghav1/2-tier-app:latest &&
-                        docker compose down &&
-                        docker compose up  --build
-                    "
-                    '''
-                }
-            }
-        }
-    }
-}
-
+  
 
   }
 }

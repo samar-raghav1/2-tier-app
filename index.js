@@ -1,9 +1,11 @@
 // index.js
 import express from "express";
-import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import connectDB from "./lib/db.js";
 import dotenv from "dotenv";
+import { DataTypes } from "sequelize";
+import { sequelize } from "./lib/db.js"; // Sequelize connection
+import connectDB from "./lib/db.js";
+
 dotenv.config();
 await connectDB();
 
@@ -14,16 +16,20 @@ const PORT = process.env.PORT || 5000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Schema & Model
-const DataSchema = new mongoose.Schema({
-  name: String,
-  age: Number,
+// Define Sequelize model
+const DataModel = sequelize.define("Data", {
+  name: { type: DataTypes.STRING, allowNull: false },
+  age: { type: DataTypes.INTEGER, allowNull: false }
+}, {
+  timestamps: false
 });
-const DataModel = mongoose.model("Data", DataSchema);
+
+// Ensure table exists
+await sequelize.sync();
 
 // Serve HTML form + data list with Bootstrap styling
 app.get("/", async (req, res) => {
-  const allData = await DataModel.find();
+  const allData = await DataModel.findAll();
 
   res.send(`
     <!DOCTYPE html>
@@ -68,8 +74,7 @@ app.get("/", async (req, res) => {
 // Handle form submission
 app.post("/add", async (req, res) => {
   const { name, age } = req.body;
-  const newData = new DataModel({ name, age });
-  await newData.save();
+  await DataModel.create({ name, age });
   res.redirect("/");
 });
 
