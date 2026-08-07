@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 2-tier-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: 2-tier-app
+  template:
+    metadata:
+      labels:
+        app: 2-tier-app
+    spec:
+      containers:
+      - name: 2-tier-app
+        image: samarraghav1/2-tier-app:latest
+        ports:
+        - containerPort: 4500
+        resources:
+            requests:
+              cpu: "500m"
+              memory: "500Mi"
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+        envFrom:
+            - secretRef:
+                name: backend-secret
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: 2-tier-app-service
+spec:
+  selector:
+    app: 2-tier-app   # must match the labels in your Deployment
+  ports:
+    - protocol: TCP
+      port: 4500
+      targetPort: 4500
+  type: LoadBalancer
